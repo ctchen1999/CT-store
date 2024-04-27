@@ -14,3 +14,4 @@ router
     .delete(productController.deleteProduct);
 
 module.exports = router;
+("DELETE PRODUCT SUCCESSFULLY.");

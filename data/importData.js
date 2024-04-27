@@ -3,7 +3,7 @@ const productData = require("./productData");
 const Product = require("./../models/productModel");
 
 connectDB();
-(async () => {
+const importData = async () => {
     try {
         await Product.deleteMany({});
         await Product.create(productData);
@@ -13,4 +13,7 @@ connectDB();
         console.log("ERROR OCCURS DURING IMPORT DATA!");
         process.exit(1);
     }
-})();
+};
+importData();
+
+module.exports = importData;
