@@ -13,4 +13,8 @@ app.use("/api/products", productRouter);
 app.use("/api/users", userRouter);
 app.use("/api/carts", cartRouter);
 
+app.get("/test", (req, res) => {
+    res.send("Hello!");
+});
+
 module.exports = app;

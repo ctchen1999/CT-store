@@ -20,6 +20,9 @@ const sendToken = (user, statusCode, res) => {
 
     res.cookie("jwt", token, cookieOptions);
 
+    // Remove password from output
+    // user.password = undefined;
+
     res.status(statusCode).json({
         status: "success",
         token,
@@ -44,16 +47,25 @@ exports.login = catchAsync(async (req, res, next) => {
     }
 
     const user = await User.findOne({ email }).select("+password");
+    // console.log(user);
 
     if (!user || !(await user.correctPassword(password))) {
-        res.status(401).json({
+        return res.status(401).json({
             status: "fail",
             message: "Invalid password",
         });
     }
-
-    res.status(200).send("Logged in successfully!");
+    sendToken(user, 200, res);
+    // res.status(200).send("Logged in successfully!");
 });
+
+exports.logout = (req, res) => {
+    res.cookie("jwt", "loggedout", {
+        expires: new Date(Date.now() + 10 * 1000), // 设置cookie过期时间为10秒后
+        httpOnly: true,
+    });
+    res.status(200).send("Logout successfully!");
+};
 
 exports.getAllUsers = catchAsync(async (req, res) => {
     const users = await User.find({});
@@ -66,3 +78,23 @@ exports.getAllUsers = catchAsync(async (req, res) => {
         },
     });
 });
+
+exports.updateUser = catchAsync(async (req, res) => {
+    const updatedUser = await User.findByIdAndUpdate(req.user._id, req.body, {
+        new: true,
+    });
+    res.status(200).json({
+        status: "success",
+        data: {
+            user: updatedUser,
+        },
+    });
+});
+
+exports.deleteUser = catchAsync(async (req, res) => {
+    await User.updateOne({ _id: req.user._id }, { active: false });
+
+    res.status(200).send(`User ${req.user.name} delete successfully.`);
+});
+
+//TODO -> ressetpassword

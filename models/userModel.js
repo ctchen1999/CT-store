@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const validator = require("validator");
 const bcrypt = require("bcrypt");
+const zxcvbn = require("zxcvbn");
 
 const userSchema = new mongoose.Schema(
     {
@@ -36,6 +37,11 @@ const userSchema = new mongoose.Schema(
             enum: ["admin", "guest", "user", "store"],
             default: "guest",
         },
+        active: {
+            type: Boolean,
+            default: true,
+            select: false,
+        },
     },
     { timestamps: true }
 );
@@ -46,12 +52,25 @@ userSchema.pre("save", async function (next) {
     this.password = await bcrypt.hash(this.password, 12);
     this.passwordConfirm = undefined;
 
-    next();
+    if (!validator.isEmail(this.email)) {
+        throw new Error("Please provide a valid email");
+    }
+
+    // check password strength -> 3up safe
+    // if (zxcvbn(this.password).score < 3)) {
+    //     throw new Error("Password is not strong enough");
+    // }
 });
 
 userSchema.methods.correctPassword = async function (candidatePassword) {
     return await bcrypt.compare(candidatePassword, this.password);
 };
+
+// Show active user only
+userSchema.pre(/^find/, function (next) {
+    this.find({ active: { $ne: false } });
+    next();
+});
 
 const User = mongoose.model("User", userSchema);
 

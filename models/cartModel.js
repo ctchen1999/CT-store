@@ -21,7 +21,16 @@ cartSchema.pre(/^find/, function (next) {
         path: "productId",
         select: "-__v -description",
     });
+
     next();
+
+    // console.log(this.productId);
+    // this.quantity = this.productId.length;
+    // this.count = this.product.reduce(
+    //     (count, product) => total + product.quantity
+    // );
+    // console.log(this.quantity, count);
+    // next();
 });
 
 const Cart = mongoose.model("Cart", cartSchema);
