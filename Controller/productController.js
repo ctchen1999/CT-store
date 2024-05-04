@@ -27,7 +27,7 @@ exports.createProduct = catchAsync(async (req, res, next) => {
 });
 
 exports.getAllProducts = catchAsync(async (req, res) => {
-    // check
+    // check if data stored in cache
     const cachedProducts = await redis.get("allProducts");
     if (cachedProducts) {
         return res.status(200).json({
@@ -40,8 +40,9 @@ exports.getAllProducts = catchAsync(async (req, res) => {
     }
 
     const products = await Product.find({}).select("-__v");
-    // console.log(products);
-    // redis.set("allProducts", JSON.stringify(products));
+    console.log(products);
+
+    // Lazy-loading
     redis.setex("allProducts", 3600, JSON.stringify(products));
 
     res.status(200).json({
@@ -53,23 +54,56 @@ exports.getAllProducts = catchAsync(async (req, res) => {
     });
 });
 
-exports.getOneProduct = async (req, res) => {
-    try {
-        const productId = req.params.id;
-        const productItem = await Product.findById(productId).select("-__v");
-        res.status(200).json({
+exports.getTopFiveProducts = catchAsync(async (req, res) => {
+    const query = req.query;
+    const products = await Product.find({})
+        .sort({ price: -1 })
+        .select("-__v")
+        .limit(5);
+
+    res.status(200).json({
+        status: "success",
+        data: {
+            products,
+        },
+    });
+});
+
+exports.getOneProduct = catchAsync(async (req, res) => {
+    const productId = req.params.id;
+    const productQuery = productId.slice(-5);
+
+    // check if data in cache
+    const cacheProduct = await redis.get(`product:${productQuery}`);
+    if (cacheProduct) {
+        return res.status(200).json({
             status: "success",
             data: {
-                product: productItem,
+                product: JSON.parse(cacheProduct),
             },
         });
-    } catch (error) {
-        console.log(error);
     }
-};
+
+    const productItem = await Product.findById(productId).select("-__v");
+    // whether item exists
+    if (!productItem) {
+        return res.send(`ID: ${productId} not in products`);
+    }
+
+    // Lazy-loading
+    redis.setex(`product:${productQuery}`, 3600, JSON.stringify(productItem));
+
+    res.status(200).json({
+        status: "success",
+        data: {
+            product: productItem,
+        },
+    });
+});
 
 exports.updateProduct = catchAsync(async (req, res, next) => {
     let productId = req.params.id;
+    const productQuery = productId.slice(-5);
 
     // Whether productId is a 24 character hex string
     if (!mongoose.Types.ObjectId.isValid(productId)) {
@@ -78,6 +112,8 @@ exports.updateProduct = catchAsync(async (req, res, next) => {
             message: "Invalid product id. Should only contains 0-9 and a-f.",
         });
     }
+
+    // check if this productId in the products
     const product = await Product.findById(productId);
     if (!product) {
         return res.status(404).json({
@@ -95,6 +131,12 @@ exports.updateProduct = catchAsync(async (req, res, next) => {
         }
     );
     updatedProduct.save(); // trigger model's save to update slug
+    redis.setex(
+        `product:${productQuery}`,
+        3600,
+        JSON.stringify(updatedProduct)
+    ); // also save to cache
+
     res.status(201).json({
         status: "success",
         data: {
