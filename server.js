@@ -1,8 +1,8 @@
-const mongoose = require("mongoose");
 const { connectDB } = require("./config/db");
 const app = require("./app");
 require("dotenv").config({ path: "./config/config.env" });
 
+// Connect to MongoDB service
 connectDB();
 
 // WEB SERVER

@@ -20,6 +20,12 @@ const productSchema = new mongoose.Schema({
         type: String,
         default: "https://via.placeholder.com/150",
     },
+    rating: {
+        type: Number,
+        min: 1,
+        max: 5,
+        default: 4.5,
+    },
     slug: String,
 });
 

@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const redis = require("./../config/cache");
 const Product = require("./../models/productModel");
 const catchAsync = require("./../utils/catchAsync");
 
@@ -25,8 +26,24 @@ exports.createProduct = catchAsync(async (req, res, next) => {
     });
 });
 
-exports.getAllProducts = catchAsync(async (req, res, next) => {
+exports.getAllProducts = catchAsync(async (req, res) => {
+    // check
+    const cachedProducts = await redis.get("allProducts");
+    if (cachedProducts) {
+        return res.status(200).json({
+            status: "success",
+            results: JSON.parse(cachedProducts).length,
+            data: {
+                products: JSON.parse(cachedProducts),
+            },
+        });
+    }
+
     const products = await Product.find({}).select("-__v");
+    // console.log(products);
+    // redis.set("allProducts", JSON.stringify(products));
+    redis.setex("allProducts", 3600, JSON.stringify(products));
+
     res.status(200).json({
         status: "success",
         results: products.length,
