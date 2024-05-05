@@ -43,7 +43,8 @@ const userSchema = new mongoose.Schema(
             select: false,
         },
     },
-    { timestamps: true }
+    { timestamps: true },
+    { toJSON: { virtuals: true }, toObject: { virtuals: true } }
 );
 
 // hash password

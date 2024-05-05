@@ -54,8 +54,8 @@ exports.getAllProducts = catchAsync(async (req, res) => {
     });
 });
 
+// TODO -> 目前是只能top5 price, 讓使用者輸入他想query 的屬性（例如評分前五）
 exports.getTopFiveProducts = catchAsync(async (req, res) => {
-    const query = req.query;
     const products = await Product.find({})
         .sort({ price: -1 })
         .select("-__v")
@@ -63,6 +63,7 @@ exports.getTopFiveProducts = catchAsync(async (req, res) => {
 
     res.status(200).json({
         status: "success",
+        results: products.length,
         data: {
             products,
         },
@@ -76,6 +77,7 @@ exports.getOneProduct = catchAsync(async (req, res) => {
     // check if data in cache
     const cacheProduct = await redis.get(`product:${productQuery}`);
     if (cacheProduct) {
+        // console.log(JSON.parse(cacheProduct));
         return res.status(200).json({
             status: "success",
             data: {
@@ -84,7 +86,10 @@ exports.getOneProduct = catchAsync(async (req, res) => {
         });
     }
 
-    const productItem = await Product.findById(productId).select("-__v");
+    const productItem = await Product.findById(productId)
+        .select("-__v")
+        .populate("reviews");
+
     // whether item exists
     if (!productItem) {
         return res.send(`ID: ${productId} not in products`);

@@ -8,6 +8,7 @@ const morgan = require("morgan");
 const productRouter = require("./routes/productRouter");
 const userRouter = require("./routes/userRouter");
 const cartRouter = require("./routes/cartRouter");
+const reviewRouter = require("./routes/reviewRouter");
 const viewRouter = require("./routes/viewRouter");
 const app = express();
 
@@ -23,6 +24,7 @@ app.use("/", viewRouter);
 app.use("/api/products", productRouter);
 app.use("/api/users", userRouter);
 app.use("/api/carts", cartRouter);
+app.use("/api/reviews", reviewRouter);
 
 app.use((req, res, next) => {
     next(createError(404));

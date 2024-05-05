@@ -3,6 +3,8 @@ const productController = require("../Controller/productController");
 
 router = express.Router();
 
+router.route("/top5").get(productController.getTopFiveProducts);
+
 router
     .route("/")
     .get(productController.getAllProducts)
@@ -14,4 +16,3 @@ router
     .delete(productController.deleteProduct);
 
 module.exports = router;
-("DELETE PRODUCT SUCCESSFULLY.");
