@@ -9,9 +9,7 @@ require("dotenv").config();
 // Connect to database before test
 beforeAll(async () => {
     try {
-        await mongoose.connect(
-            "mongodb+srv://abfa762466:abfa76247284@cluster0.di1bznu.mongodb.net/"
-        );
+        await mongoose.connect();
         console.log("TEST DATABASE CONNECT SUCCESSFULLY");
     } catch (err) {
         console.error(err);
