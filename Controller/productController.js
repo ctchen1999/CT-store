@@ -74,17 +74,19 @@ exports.getOneProduct = catchAsync(async (req, res) => {
     const productId = req.params.id;
     const productQuery = productId.slice(-5);
 
+    // Cache 部分，如果我新增review on product 就會出事
     // check if data in cache
-    const cacheProduct = await redis.get(`product:${productQuery}`);
-    if (cacheProduct) {
-        // console.log(JSON.parse(cacheProduct));
-        return res.status(200).json({
-            status: "success",
-            data: {
-                product: JSON.parse(cacheProduct),
-            },
-        });
-    }
+    // const cacheProduct = await redis.get(`product:${productQuery}`);
+    // // console.log(cacheProduct);
+    // if (cacheProduct) {
+    //     // console.log(JSON.parse(cacheProduct));
+    //     return res.status(200).json({
+    //         status: "success",
+    //         data: {
+    //             product: JSON.parse(cacheProduct),
+    //         },
+    //     });
+    // }
 
     const productItem = await Product.findById(productId)
         .select("-__v")
