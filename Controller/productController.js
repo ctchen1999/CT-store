@@ -4,15 +4,28 @@ const Product = require("./../models/productModel");
 const catchAsync = require("./../utils/catchAsync");
 
 exports.createProduct = catchAsync(async (req, res, next) => {
-    const curProductName = req.body.name;
-    const allProducts = await Product.find({});
+    const curProductName = req.body.map((product) => product.name); // curProductName array
+    const allProducts = await Product.find({}); // allProducts array
     const allProductsName = allProducts.map((product) => product.name);
 
+    // record whether each input product in the allProductName array or not
+    // e.g. [true, false] means first element of curProductName is already in used
+    const flag = curProductName.map((curName) => {
+        if (allProductsName.includes(curName)) return true;
+        else return false;
+    });
+
     // If already exists product with the same name
-    if (allProductsName.includes(curProductName)) {
+    if (flag.reduce((acc, cur) => acc + cur, 0) !== 0) {
+        // If there's name already in used, return name to let user know
+        let nameExist = curProductName.map((curName, idx) => {
+            if (flag[idx]) return curName;
+        });
+        nameExist.join(" ");
+
         return res.status(409).json({
             status: "fail",
-            message: "Product name already exists.",
+            message: `Product name ${nameExist} already exists.`,
         });
     }
 
@@ -40,7 +53,7 @@ exports.getAllProducts = catchAsync(async (req, res) => {
     }
 
     const products = await Product.find({}).select("-__v");
-    console.log(products);
+    // console.log(products);
 
     // Lazy-loading
     redis.setex("allProducts", 3600, JSON.stringify(products));
