@@ -30,11 +30,19 @@ exports.createProduct = catchAsync(async (req, res, next) => {
     }
 
     const newProduct = req.body;
-    await Product.create(req.body);
+    const products = await Product.create(req.body);
+
+    if (!products) {
+        res.status(400).json({
+            status: "fail",
+            message: "Invalid product data.",
+        });
+    }
+
     res.status(201).json({
         status: "success",
         data: {
-            product: newProduct,
+            products: newProduct,
         },
     });
 });
