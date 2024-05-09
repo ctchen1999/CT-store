@@ -15,7 +15,7 @@ jobs:
     steps:
     - name: 'Checkout repository'
       uses: actions/checkout@v4
-    - name: 'Run the test'
+    - name: 'Setup Node.js'
       uses: actions/setup-node@v3
       
     - name: 'Install dependencies' 
@@ -24,6 +24,9 @@ jobs:
     # - run: npm run build --if-present
     - name: 'Run tests'
       run: npm run test
+      env: 
+        DB_CONNECTION_STRING: ${{ secrets.DB_CONNECTION_STRING }}
+
 
 
 
