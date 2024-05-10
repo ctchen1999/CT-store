@@ -7,20 +7,6 @@ const mongoose = require("mongoose");
 const productData = require("./../data/productData");
 // const importData = require("./../data/importData");
 
-// Connect to database before test
-// beforeAll(async () => {
-//     try {
-//         await mongoose.connect(
-//             process.env.DB_CONNECTION_STRING ||
-//                 "mongodb+srv://abfa762466:abfa76247284@cluster0.di1bznu.mongodb.net/"
-//         );
-//         console.log("TEST DATABASE CONNECT SUCCESSFULLY");
-//     } catch (err) {
-//         console.error(err);
-//         console.log("TEST DATABASE CONNECT FAILED");
-//     }
-// });
-
 beforeAll(async () => {
     try {
         connectTestDB();
@@ -34,12 +20,11 @@ beforeAll(async () => {
 // delete test product
 beforeEach(async () => {
     try {
-        await Product.deleteMany({ name: { $regex: /^TEST PRODUCT/ } });
-    } catch (err) {}
-});
-
-it("TEST", () => {
-    expect(1).toBe(1);
+        await Product.deleteMany({});
+        console.log("CLEAN UP TEST DATABASE SUCCESSFULLY");
+    } catch (err) {
+        console.error(err);
+    }
 });
 
 describe("API /api/products TEST START...", () => {
@@ -62,14 +47,21 @@ describe("API /api/products TEST START...", () => {
         expect(res.body.data.products.length).toBe(productData.length);
     });
 
-    // it("GET /api/products/:id | should return one product with corresponded product ", async () => {
-    //     const id = "662cca1a17b33cba9a41ab72";
-    //     const res = await request(app).get(`/api/products/${id}`);
+    it("GET /api/products/:id | should return one product with corresponded product ", async () => {
+        await request(app).post("/api/products").send(productData);
+        let res = await request(app).get("/api/products");
+        console.log(res.body.data.products);
+        const randomNumber = productData.length;
+        const id = res.body.data.products[randomNumber - 1]._id;
+        console.log("id", id);
 
-    //     expect(res.body.status).toBe("success");
-    //     expect(res.statusCode).toBe(200);
-    //     expect(res.body.data.product._id).toBe(id);
-    // });
+        res = await request(app).get(`/api/products/${id}`);
+        console.log(res.body);
+
+        // expect(res.body.status).toBe("success");
+        // expect(res.statusCode).toBe(200);
+        // expect(res.body.data.product._id).toBe(id);
+    });
 
     // it("POST /api/products | should add a new product to database", async () => {
     //     const newProduct = {

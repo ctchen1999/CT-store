@@ -30,7 +30,7 @@ exports.createProduct = catchAsync(async (req, res, next) => {
     }
 
     const newProduct = req.body;
-    const products = await Product.create(req.body);
+    const products = await Product.create(req.body, { new: true });
 
     if (!products) {
         res.status(400).json({

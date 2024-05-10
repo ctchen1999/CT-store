@@ -43,7 +43,7 @@ productSchema.virtual("reviews", {
 });
 
 productSchema.pre("save", function (next) {
-    console.log(this.name);
+    // console.log(this.name);
     this.slug = slugify(this.name, {
         replacement: "-",
         remove: undefined,
