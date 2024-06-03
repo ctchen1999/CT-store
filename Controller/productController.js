@@ -75,12 +75,12 @@ exports.getAllProducts = catchAsync(async (req, res) => {
     });
 });
 
-// TODO -> 目前是只能top5 price, 讓使用者輸入他想query 的屬性（例如評分前五）
-exports.getTopFiveProducts = catchAsync(async (req, res) => {
+exports.queryProducts = catchAsync(async (req, res) => {
+    const { query, number } = req.params;
     const products = await Product.find({})
-        .sort({ price: -1 })
-        .select("-__v")
-        .limit(5);
+        .sort({ [query]: -1 }) // computer property names
+        .select(`name ${query} `)
+        .limit(number);
 
     res.status(200).json({
         status: "success",

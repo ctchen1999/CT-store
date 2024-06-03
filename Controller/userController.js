@@ -34,7 +34,7 @@ const sendToken = (user, statusCode, res) => {
 
 exports.signUp = catchAsync(async (req, res, next) => {
     const newUser = await User.create(req.body);
-    const cart = await Cart.create({ userId: newUser._id });
+    await Cart.create({ userId: newUser._id }); // create cart when create user
 
     sendToken(newUser, 200, res);
 });
@@ -97,4 +97,4 @@ exports.deleteUser = catchAsync(async (req, res) => {
     res.status(200).send(`User ${req.user.name} delete successfully.`);
 });
 
-//TODO -> ressetpassword
+//TODO -> resetpassword

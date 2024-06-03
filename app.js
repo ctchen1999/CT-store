@@ -25,6 +25,7 @@ app.use("/api/products", productRouter);
 app.use("/api/users", userRouter);
 app.use("/api/carts", cartRouter);
 app.use("/api/reviews", reviewRouter);
+app.use("*", (req, res) => res.end("Unrecognized route"));
 
 app.use((req, res, next) => {
     next(createError(404));

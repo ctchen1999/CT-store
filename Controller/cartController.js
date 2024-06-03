@@ -1,25 +1,28 @@
 const catchAsync = require("./../utils/catchAsync");
 const Cart = require("./../models/cartModel");
 
-//TODO -> 目前只能加一個品項，修改成同時加很多品項
 exports.addNewItem = catchAsync(async (req, res, next) => {
     const userId = req.body.userId;
-    const productId = req.body.productId[0];
+    const productId = req.body.productId;
 
     const currentCart = await Cart.findOne({ userId: userId });
 
-    const productIds = currentCart.productId.map((item) => String(item._id));
+    const currentProductIds = currentCart.productId.map((item) =>
+        String(item._id)
+    );
 
     const cart = await Cart.findOneAndUpdate(
         { userId: userId },
         {
-            $push: { productId: productId },
+            $push: { productId: [...productId] },
         },
         { new: true }
     );
+    console.log(cart);
 
     res.status(200).json({
         status: "success",
+        number: cart.productId.length,
         data: cart,
     });
 });

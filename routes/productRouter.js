@@ -3,7 +3,7 @@ const productController = require("../Controller/productController");
 
 router = express.Router();
 
-router.route("/top5").get(productController.getTopFiveProducts);
+router.route("/top/:query/:number").get(productController.queryProducts);
 
 router
     .route("/")
