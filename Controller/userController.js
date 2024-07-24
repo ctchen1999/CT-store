@@ -19,7 +19,7 @@ const sendToken = (user, statusCode, res) => {
     };
 
     res.cookie("jwt", token, cookieOptions);
-
+    res.cookie()
     // Remove password from output
     // user.password = undefined;
 

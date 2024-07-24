@@ -3,3 +3,8 @@ tmp.*
 *.rest
 config
 *.env
+*.png
+*.rdb
+*.log
+todo.md
+views/

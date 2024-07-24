@@ -1,8 +1,9 @@
-const { connectDB } = require("./../config/db");
+const { connectDB, connectTestDB } = require("./../config/db");
 const productData = require("./productData");
 const Product = require("./../models/productModel");
 
 connectDB();
+
 const importData = async () => {
     try {
         await Product.deleteMany({});

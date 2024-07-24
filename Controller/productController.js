@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const redis = require("./../config/cache");
+// const redis = require("./../config/cache");
 const Product = require("./../models/productModel");
 const catchAsync = require("./../utils/catchAsync");
 
@@ -14,7 +14,7 @@ exports.createProduct = catchAsync(async (req, res, next) => {
         if (allProductsName.includes(curName)) return true;
         else return false;
     });
-
+    
     // If already exists product with the same name
     if (flag.reduce((acc, cur) => acc + cur, 0) !== 0) {
         // If there's name already in used, return name to let user know
@@ -49,22 +49,22 @@ exports.createProduct = catchAsync(async (req, res, next) => {
 
 exports.getAllProducts = catchAsync(async (req, res) => {
     // check if data stored in cache
-    const cachedProducts = await redis.get("allProducts");
-    if (cachedProducts) {
-        return res.status(200).json({
-            status: "success",
-            results: JSON.parse(cachedProducts).length,
-            data: {
-                products: JSON.parse(cachedProducts),
-            },
-        });
-    }
+    // const cachedProducts = await redis.get("allProducts");
+    // if (cachedProducts) {
+    //     return res.status(200).json({
+    //         status: "success",
+    //         results: JSON.parse(cachedProducts).length,
+    //         data: {
+    //             products: JSON.parse(cachedProducts),
+    //         },
+    //     });
+    // }
 
     const products = await Product.find({}).select("-__v");
     // console.log(products);
 
     // Lazy-loading
-    redis.setex("allProducts", 3600, JSON.stringify(products));
+    // redis.setex("allProducts", 3600, JSON.stringify(products));
 
     res.status(200).json({
         status: "success",
@@ -159,11 +159,12 @@ exports.updateProduct = catchAsync(async (req, res, next) => {
         }
     );
     updatedProduct.save(); // trigger model's save to update slug
-    redis.setex(
-        `product:${productQuery}`,
-        3600,
-        JSON.stringify(updatedProduct)
-    ); // also save to cache
+    
+    // redis.setex(
+    //     `product:${productQuery}`,
+    //     3600,
+    //     JSON.stringify(updatedProduct)
+    // ); // also save to cache
 
     res.status(201).json({
         status: "success",
