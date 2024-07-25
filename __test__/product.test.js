@@ -9,7 +9,7 @@ describe('TEST ON API -> /api/products', () => {
         jest.clearAllMocks();
     });
 
-    describe('POST', () => {
+    describe('POST /api/products', () => {
         it('should return 409 if product name already exists', async () => {
             Product.find.mockResolvedValue([{ name: 'Existing Product' }]);
 
@@ -56,4 +56,56 @@ describe('TEST ON API -> /api/products', () => {
             });
         });
     });
+
+    describe('GET /api/products', () => {
+        it('should return all products', async () => {
+            const mockProducts = [{ name: 'Product 1' }, { name: 'Product 2' }];
+            Product.find.mockResolvedValue(mockProducts);
+
+            const response = await request(app).get('/api/products');
+
+            expect(response.status).toBe(200);
+            expect(response.body).toEqual({
+                status: 'success',
+                results: mockProducts.length,
+                data: {
+                    products: mockProducts,
+                },
+            });
+        });
+    });
+
+    describe('GET /api/products/:id', () => {
+        it('should return a product by id', async () => {
+            const mockProduct = { name: 'Product 1' };
+            Product.findById.mockResolvedValue(mockProduct);
+
+            const response = await request(app).get('/api/products/1');
+
+            expect(response.status).toBe(200);
+            expect(response.body).toEqual({
+                status: 'success',
+                data: {
+                    product: mockProduct,
+                },
+            });
+        });
+
+        it('should return nothing if product not found', async () => {
+            const mockProductId = 1;
+            Product.findById.mockResolvedValue(null);
+
+            const response = await request(app).get(
+                `/api/products/${mockProductId}`
+            );
+
+            expect(response.status).toBe(200);
+            expect(response.text).toEqual(
+                `ID: ${mockProductId} not in products`
+            );
+        });
+    });
+
+    describe('PATCH /api/products/:id', () => {});
+    describe('DELETE /api/products/:id', () => {});
 });

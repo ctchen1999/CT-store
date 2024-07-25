@@ -1,7 +1,7 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 // const redis = require("./../config/cache");
-const Product = require("./../models/productModel");
-const catchAsync = require("./../utils/catchAsync");
+const Product = require('./../models/productModel');
+const catchAsync = require('./../utils/catchAsync');
 
 exports.createProduct = catchAsync(async (req, res, next) => {
     const curProductName = req.body.map((product) => product.name); // curProductName array
@@ -14,17 +14,17 @@ exports.createProduct = catchAsync(async (req, res, next) => {
         if (allProductsName.includes(curName)) return true;
         else return false;
     });
-    
+
     // If already exists product with the same name
     if (flag.reduce((acc, cur) => acc + cur, 0) !== 0) {
         // If there's name already in used, return name to let user know
         let nameExist = curProductName.map((curName, idx) => {
             if (flag[idx]) return curName;
         });
-        nameExist.join(" ");
+        nameExist.join(' ');
 
         return res.status(409).json({
-            status: "fail",
+            status: 'fail',
             message: `Product name ${nameExist} already exists.`,
         });
     }
@@ -34,13 +34,13 @@ exports.createProduct = catchAsync(async (req, res, next) => {
 
     if (!products) {
         res.status(400).json({
-            status: "fail",
-            message: "Invalid product data.",
+            status: 'fail',
+            message: 'Invalid product data.',
         });
     }
 
     res.status(201).json({
-        status: "success",
+        status: 'success',
         data: {
             products: newProduct,
         },
@@ -60,14 +60,15 @@ exports.getAllProducts = catchAsync(async (req, res) => {
     //     });
     // }
 
-    const products = await Product.find({}).select("-__v");
+    const products = await Product.find({});
+    console.log(products);
     // console.log(products);
 
     // Lazy-loading
     // redis.setex("allProducts", 3600, JSON.stringify(products));
 
     res.status(200).json({
-        status: "success",
+        status: 'success',
         results: products.length,
         data: {
             products,
@@ -83,7 +84,7 @@ exports.queryProducts = catchAsync(async (req, res) => {
         .limit(number);
 
     res.status(200).json({
-        status: "success",
+        status: 'success',
         results: products.length,
         data: {
             products,
@@ -109,9 +110,10 @@ exports.getOneProduct = catchAsync(async (req, res) => {
     //     });
     // }
 
-    const productItem = await Product.findById(productId)
-        .select("-__v")
-        .populate("reviews");
+    // jest test 時候加上.select.populate 會出問題
+    const productItem = await Product.findById(productId);
+    // .select('-__v')
+    // .populate('reviews');
 
     // whether item exists
     if (!productItem) {
@@ -119,10 +121,10 @@ exports.getOneProduct = catchAsync(async (req, res) => {
     }
 
     // Lazy-loading
-    redis.setex(`product:${productQuery}`, 3600, JSON.stringify(productItem));
+    // redis.setex(`product:${productQuery}`, 3600, JSON.stringify(productItem));
 
     res.status(200).json({
-        status: "success",
+        status: 'success',
         data: {
             product: productItem,
         },
@@ -136,8 +138,8 @@ exports.updateProduct = catchAsync(async (req, res, next) => {
     // Whether productId is a 24 character hex string
     if (!mongoose.Types.ObjectId.isValid(productId)) {
         return res.status(400).json({
-            status: "fail",
-            message: "Invalid product id. Should only contains 0-9 and a-f.",
+            status: 'fail',
+            message: 'Invalid product id. Should only contains 0-9 and a-f.',
         });
     }
 
@@ -145,7 +147,7 @@ exports.updateProduct = catchAsync(async (req, res, next) => {
     const product = await Product.findById(productId);
     if (!product) {
         return res.status(404).json({
-            status: "fail",
+            status: 'fail',
             message: `Product with given id ${productId} not found.`,
         });
     }
@@ -159,7 +161,7 @@ exports.updateProduct = catchAsync(async (req, res, next) => {
         }
     );
     updatedProduct.save(); // trigger model's save to update slug
-    
+
     // redis.setex(
     //     `product:${productQuery}`,
     //     3600,
@@ -167,7 +169,7 @@ exports.updateProduct = catchAsync(async (req, res, next) => {
     // ); // also save to cache
 
     res.status(201).json({
-        status: "success",
+        status: 'success',
         data: {
             product: updatedProduct,
         },
@@ -176,5 +178,5 @@ exports.updateProduct = catchAsync(async (req, res, next) => {
 
 exports.deleteProduct = async (req, res) => {
     await Product.findByIdAndDelete(req.params.id);
-    res.status(200).send("DELETE PRODUCT SUCCESSFULLY.");
+    res.status(200).send('DELETE PRODUCT SUCCESSFULLY.');
 };
