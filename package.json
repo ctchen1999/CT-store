@@ -8,6 +8,9 @@
         "test": "jest",
         "test:watch": "jest --watchAll"
     },
+    "jest": {
+        "verbose": true
+    },
     "author": "CTCHEN",
     "license": "ISC",
     "dependencies": {
