@@ -1,7 +1,10 @@
 const request = require('supertest');
 const app = require('../app');
 const Product = require('../models/productModel');
+const { default: mongoose } = require('mongoose');
+const { expect } = require('@jest/globals');
 
+const mockFn = jest.fn();
 jest.mock('../models/productModel');
 
 describe('TEST ON API -> /api/products', () => {
@@ -106,6 +109,49 @@ describe('TEST ON API -> /api/products', () => {
         });
     });
 
-    describe('PATCH /api/products/:id', () => {});
+    describe('PATCH /api/products/:id', () => {
+        const mockProductId = '66312ed471c4ffbbf585fcfe';
+
+        it('should return 404 if product id not found', async () => {
+            jest.mock('mongoose', () => ({
+                Types: {
+                    ObjectId: {
+                        isValid: jest.fn(() => true),
+                    },
+                },
+            }));
+
+            Product.findById.mockResolvedValue(null);
+
+            const response = await request(app)
+                .patch(`/api/products/${mockProductId}`)
+                .send({ name: 'Updated Product' });
+
+            expect(response.status).toBe(404);
+            expect(response.body.message).toEqual(
+                `Product with given id ${mockProductId} not found.`
+            );
+        });
+
+        it('should return updated product by id', async () => {
+            const mockProduct = { name: 'Product 1' };
+            const mockUpdatedProduct = { name: 'Updated Product' };
+            Product.findById.mockResolvedValue(mockProduct);
+            Product.findByIdAndUpdate.mockResolvedValue(mockUpdatedProduct);
+
+            const response = await request(app)
+                .patch(`/api/products/${mockProductId}`)
+                .send({ name: 'Updated Product' });
+
+            expect(response.status).toBe(201);
+            expect(response.body).toEqual({
+                status: 'success',
+                data: {
+                    product: mockUpdatedProduct,
+                },
+            });
+        });
+    });
+
     describe('DELETE /api/products/:id', () => {});
 });

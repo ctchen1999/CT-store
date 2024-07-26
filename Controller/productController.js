@@ -61,7 +61,6 @@ exports.getAllProducts = catchAsync(async (req, res) => {
     // }
 
     const products = await Product.find({});
-    console.log(products);
     // console.log(products);
 
     // Lazy-loading
@@ -136,6 +135,7 @@ exports.updateProduct = catchAsync(async (req, res, next) => {
     const productQuery = productId.slice(-5);
 
     // Whether productId is a 24 character hex string
+    // -> not needed because of mongoose generate it automatically
     if (!mongoose.Types.ObjectId.isValid(productId)) {
         return res.status(400).json({
             status: 'fail',
@@ -160,7 +160,7 @@ exports.updateProduct = catchAsync(async (req, res, next) => {
             runValidators: true,
         }
     );
-    updatedProduct.save(); // trigger model's save to update slug
+    // updatedProduct.save(); // trigger model's save to update slug
 
     // redis.setex(
     //     `product:${productQuery}`,
