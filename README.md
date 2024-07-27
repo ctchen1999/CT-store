@@ -1,5 +1,129 @@
-### function
+# CT-store
 
-    1. Sign up/ log in/ log out
-    2. Redis
-    3.
+CT-store is an e-commerce application based on Node.js and Express. This project provides a RESTful API for managing products, users, carts, and reviews.
+You can clone this repo for your e-commerce backend system.
+
+## Directory Structure
+
+-   `app.js`: Main application file
+-   `routes/`: Contains route files for different resources
+-   `Controller/`: Contains controller files for handling requests
+-   `models/`: Contains model files for database schemas
+-   `views/`: Contains view templates
+-   `swagger.js`: Swagger setup for API documentation
+-   `__test__/`: Contains test files
+
+## Features
+
+-   **Product Management**: Create, read, update, and delete products.
+-   **User Management**: Manage user accounts and authentication.
+-   **Cart Management**: Add, update, and remove items from the cart.
+-   **Review Management**: Add and manage product reviews.
+-   **API Documentation**: Swagger-based API documentation.
+-   **Error Handling**: Comprehensive error handling for API requests.
+-   **Testing**: Unit and integration tests for API endpoints.
+
+## Tech Stack
+
+-   **Node.js**: JavaScript runtime for building server-side applications.
+-   **Express**: Web framework for Node.js.
+-   **MongoDB**: NoSQL database for storing application data.
+-   **Mongoose**: ODM (Object Data Modeling) library for MongoDB and Node.js.
+-   **Swagger**: API documentation tool.
+-   **Jest**: Testing framework for JavaScript.
+-   **Supertest**: Library for testing Node.js HTTP servers.
+-   **Pug**: Template engine for server-side rendering.
+-   **Morgan**: HTTP request logger middleware for Node.js.
+-   **Cors**: Middleware for enabling Cross-Origin Resource Sharing.
+-   **Http-errors**: Library for creating HTTP errors.
+-   **Cookie-parser**: Middleware for parsing cookies.
+
+## Guide
+
+### Prerequisites
+
+-   Node.js (v12 or higher)
+-   MongoDB
+
+### Installation
+
+1. **Clone the repository:**
+
+    ```bash
+    git clone https://github.com/your-username/CT-store.git
+    cd CT-store
+    ```
+
+2. **Install dependencies:**
+
+    ```bash
+    npm install
+    ```
+
+3. **Set up environment variables:**
+   Create a `.env` file in the root directory and add the following:
+
+    ```env
+    NODE_ENV=development
+    PORT=3000
+    DATABASE=Your mongodb database link
+    ```
+
+4. **Start the application:**
+
+    ```bash
+    npm start
+    ```
+
+5. **Access the API documentation:**
+   Open your browser and navigate to `http://localhost:3000/api-docs` to view the Swagger API documentation.
+
+## Contribution
+
+We welcome contributions to the CT Store project! If you have any ideas, suggestions, or bug reports, please feel free to open an issue or submit a pull request. Here are the steps to contribute:
+
+1. **Fork the repository:**
+
+    Click the "Fork" button at the top right corner of this repository page.
+
+2. **Clone your forked repository:**
+
+    ```bash
+    git clone https://github.com/your-username/CT-store.git
+    cd CT-store
+    ```
+
+3. **Create a new branch:**
+
+    ```bash
+    git checkout -b feature/your-feature-name
+    ```
+
+4. **Make your changes:**
+
+    Implement your feature or fix the bug in your branch.
+
+5. **Commit your changes:**
+
+    ```bash
+    git add .
+    git commit -m "Add your commit message here"
+    ```
+
+6. **Push to your forked repository:**
+
+    ```bash
+    git push origin feature/your-feature-name
+    ```
+
+7. **Create a pull request:**
+
+    Go to the original repository and click the "New Pull Request" button. Provide a clear description of your changes and submit the pull request.
+
+## Contact
+
+If you have any questions or need further assistance, please feel free to contact us:
+
+-   **Email**: abfa762466@gmail.com
+
+Appreciate your feedback and support!

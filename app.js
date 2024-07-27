@@ -10,7 +10,10 @@ const userRouter = require('./routes/userRouter');
 const cartRouter = require('./routes/cartRouter');
 const reviewRouter = require('./routes/reviewRouter');
 const viewRouter = require('./routes/viewRouter');
+const swaggerSetup = require('./swagger');
+
 const app = express();
+swaggerSetup(app);
 
 app.set('view engine', 'pug');
 app.set('views', path.join(__dirname, 'views'));
