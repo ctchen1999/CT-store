@@ -1,7 +1,7 @@
-const User = require("./../models/userModel");
-const Cart = require("./../models/cartModel");
-const catchAsync = require("./../utils/catchAsync");
-const jwt = require("jsonwebtoken");
+const User = require('./../models/userModel');
+const Cart = require('./../models/cartModel');
+const catchAsync = require('./../utils/catchAsync');
+const jwt = require('jsonwebtoken');
 
 const signToken = (id) => {
     return jwt.sign({ id }, process.env.JWT_SECRET, {
@@ -18,13 +18,12 @@ const sendToken = (user, statusCode, res) => {
         httpOnly: true,
     };
 
-    res.cookie("jwt", token, cookieOptions);
-    res.cookie()
+    res.cookie('jwt', token, cookieOptions);
     // Remove password from output
     // user.password = undefined;
 
     res.status(statusCode).json({
-        status: "success",
+        status: 'success',
         token,
         data: {
             user,
@@ -33,6 +32,12 @@ const sendToken = (user, statusCode, res) => {
 };
 
 exports.signUp = catchAsync(async (req, res, next) => {
+    const { name, email, password, passwordConfirm } = req.body;
+
+    // find user already exists, send message
+    const user = await User.find({ email });
+    if (user) res.send('User already exist!');
+
     const newUser = await User.create(req.body);
     await Cart.create({ userId: newUser._id }); // create cart when create user
 
@@ -43,16 +48,15 @@ exports.login = catchAsync(async (req, res, next) => {
     const { email, password } = req.body;
 
     if (!email || !password) {
-        res.send("Please provide email and password!");
+        res.send('Please provide email and password!');
     }
 
-    const user = await User.findOne({ email }).select("+password");
-    // console.log(user);
+    const user = await User.findOne({ email });
 
     if (!user || !(await user.correctPassword(password))) {
         return res.status(401).json({
-            status: "fail",
-            message: "Invalid password",
+            status: 'fail',
+            message: 'Invalid password',
         });
     }
     sendToken(user, 200, res);
@@ -60,18 +64,18 @@ exports.login = catchAsync(async (req, res, next) => {
 });
 
 exports.logout = (req, res) => {
-    res.cookie("jwt", "loggedout", {
-        expires: new Date(Date.now() + 10 * 1000), // 设置cookie过期时间为10秒后
-        httpOnly: true,
+    res.cookie('jwt', 'loggedout', {
+        expires: new Date(Date.now() + 10 * 1000), // 設置cookie過期時間為10秒後
+        httpOnly: true, // httpOnly屬性可以防止客戶端腳本訪問cookie，從而提高安全性，避免XSS攻擊
     });
-    res.status(200).send("Logout successfully!");
+    res.status(200).send('Logout successfully!');
 };
 
 exports.getAllUsers = catchAsync(async (req, res) => {
     const users = await User.find({});
 
     res.status(200).json({
-        status: "success",
+        status: 'success',
         results: users.length,
         data: {
             users,
@@ -83,8 +87,10 @@ exports.updateUser = catchAsync(async (req, res) => {
     const updatedUser = await User.findByIdAndUpdate(req.user._id, req.body, {
         new: true,
     });
+    console.log(req.body);
+
     res.status(200).json({
-        status: "success",
+        status: 'success',
         data: {
             user: updatedUser,
         },

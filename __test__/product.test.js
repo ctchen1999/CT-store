@@ -1,8 +1,6 @@
 const request = require('supertest');
 const app = require('../app');
 const Product = require('../models/productModel');
-const { default: mongoose } = require('mongoose');
-const { expect } = require('@jest/globals');
 
 const mockFn = jest.fn();
 jest.mock('../models/productModel');
@@ -153,5 +151,18 @@ describe('TEST ON API -> /api/products', () => {
         });
     });
 
-    describe('DELETE /api/products/:id', () => {});
+    describe('DELETE /api/products/:id', () => {
+        const mockProductId = '66312ed471c4ffbbf585fcfe';
+
+        it('should return DELETE PRODUCT SECCESSFULLY', async () => {
+            Product.findByIdAndDelete.mockResolvedValue(null);
+
+            const response = await request(app).delete(
+                `/api/products/${mockProductId}`
+            );
+
+            expect(response.status).toBe(200);
+            expect(response.text).toEqual('DELETE PRODUCT SUCCESSFULLY.');
+        });
+    });
 });
