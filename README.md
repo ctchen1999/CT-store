@@ -3,6 +3,9 @@
 CT-store is an e-commerce backend system based on Node.js, Express, MongoDB, etc. This project provides a RESTful API for managing products, users, carts, and reviews.
 You can clone this repo for your e-commerce backend system.
 
+[![繁體中文](https://img.shields.io/badge/繁體中文-Readme-blue)](README_zh-TW.md)
+[![简体中文](https://img.shields.io/badge/简体中文-Readme-blue)](README_zh-CN.md)
+
 ## Directory Structure
 
 -   `app.js`: Main application file
