@@ -25,7 +25,7 @@ You can clone this repo for your e-commerce backend system.
 -   **Review Management**: Add and manage product reviews.
 -   **API Documentation**: Swagger-based API documentation.
 -   **Error Handling**: Comprehensive error handling for API requests.
--   **Testing**: Unit and integration tests for API endpoints.
+-   **Testing**: Unit, integration and stress tests for API endpoints.
 
 ## Tech Stack
 
@@ -36,6 +36,7 @@ You can clone this repo for your e-commerce backend system.
 -   **pm2**: Simple implementation on cluster.
 -   **Swagger**: API documentation tool.
 -   **Jest**: Testing framework for JavaScript.
+-   **Apache Jmeter**: Load test on API.
 -   **Supertest**: Library for testing Node.js HTTP servers.
 -   **Morgan**: HTTP request logger middleware for Node.js.
 -   **Cors**: Middleware for enabling Cross-Origin Resource Sharing.
