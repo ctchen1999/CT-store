@@ -12,6 +12,7 @@ You can clone this repo for your e-commerce backend system.
 -   `views/`: Contains view templates
 -   `swagger.js`: Swagger setup for API documentation
 -   `__test__/`: Contains test files
+-   `config/`: Contains .env, config setup
 
 ## Features
 
@@ -29,10 +30,10 @@ You can clone this repo for your e-commerce backend system.
 -   **Express**: Web framework for Node.js.
 -   **MongoDB**: NoSQL database for storing application data.
 -   **Mongoose**: ODM (Object Data Modeling) library for MongoDB and Node.js.
+-   **pm2**: Simple implementation on cluster.
 -   **Swagger**: API documentation tool.
 -   **Jest**: Testing framework for JavaScript.
 -   **Supertest**: Library for testing Node.js HTTP servers.
--   **Pug**: Template engine for server-side rendering.
 -   **Morgan**: HTTP request logger middleware for Node.js.
 -   **Cors**: Middleware for enabling Cross-Origin Resource Sharing.
 -   **Http-errors**: Library for creating HTTP errors.
@@ -61,10 +62,12 @@ You can clone this repo for your e-commerce backend system.
     ```
 
 3. **Set up environment variables:**
-   Create a `.env` file in the root directory and add the following:
+   Create a `.env` file **in the config directory** and add the following:
 
     ```env
-    NODE_ENV=development
+    JWT_SECRET = Set JWT SECRET KEY for jwt authorization
+    JWT_EXPIRES_IN = 2h
+
     PORT=3000
     DATABASE=Your mongodb database link
     ```
@@ -73,6 +76,7 @@ You can clone this repo for your e-commerce backend system.
 
     ```bash
     npm start
+    npm start:prod # with pm2 load balancing
     ```
 
 5. **Access the API documentation:**
