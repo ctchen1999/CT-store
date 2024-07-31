@@ -1,6 +1,6 @@
 # CT-store
 
-CT-store is an e-commerce application based on Node.js and Express. This project provides a RESTful API for managing products, users, carts, and reviews.
+CT-store is an e-commerce backend system based on Node.js, Express, MongoDB, etc. This project provides a RESTful API for managing products, users, carts, and reviews.
 You can clone this repo for your e-commerce backend system.
 
 ## Directory Structure
@@ -77,6 +77,65 @@ You can clone this repo for your e-commerce backend system.
 
 5. **Access the API documentation:**
    Open your browser and navigate to `http://localhost:3000/api-docs` to view the Swagger API documentation.
+
+## PM2 Load Balancing
+
+This section provides an alternative version of the application backend that includes a load balancing module. This module helps to increase the capability of handling a large number of requests efficiently.
+
+### Using PM2 for Load Balancing
+
+1. **Install PM2:**
+
+    ```bash
+    npm install pm2 -g
+    ```
+
+2. **Configure the ecosystem.config.js file:**
+
+    Create an `ecosystem.config.js` file in the root directory of your project and add the following content:
+
+    ```javascript
+    module.exports = {
+        apps: [
+            {
+                name: 'app',
+                script: './app.js',
+                instances: 'max',
+                exec_mode: 'cluster',
+                autorestart: true,
+                watch: true,
+                max_memory_restart: '2G',
+                env: {
+                    NODE_ENV: 'development',
+                    PORT: 3000,
+                },
+                env_production: {
+                    NODE_ENV: 'production',
+                },
+            },
+        ],
+    };
+    ```
+
+3. **Start the application:**
+
+    ```bash
+    pm2 start ecosystem.config.js
+    ```
+
+4. **Check the application status:**
+
+    ```bash
+    pm2 status
+    ```
+
+5. **Check system logs simultaneouly**
+
+    ```bash
+    pm2 logs
+    ```
+
+By following these steps, you can use PM2 to distribute your application across multiple CPU cores, achieving load balancing and improving the performance and stability of your application.
 
 ## Contribution
 
