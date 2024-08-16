@@ -1,41 +1,41 @@
-const mongoose = require("mongoose");
-const validator = require("validator");
-const bcrypt = require("bcrypt");
-const zxcvbn = require("zxcvbn");
+const mongoose = require('mongoose');
+const validator = require('validator');
+// const bcrypt = require('bcrypt');
+const zxcvbn = require('zxcvbn');
 
 const userSchema = new mongoose.Schema(
     {
         name: {
             type: String,
-            required: [true, "A user must have a user name;"],
+            required: [true, 'A user must have a user name;'],
         },
         email: {
             type: String,
-            validate: [validator.isEmail, "Please provide a valid email;"],
+            validate: [validator.isEmail, 'Please provide a valid email;'],
             unique: true,
-            required: [true, "A user must have a email address"],
+            required: [true, 'A user must have a email address'],
         },
         password: {
             type: String,
-            required: [true, "A user must hava a password."],
+            required: [true, 'A user must hava a password.'],
             minlength: 8,
         },
         passwordConfirm: {
             type: String,
-            required: [true, "Please confirm your password"],
+            required: [true, 'Please confirm your password'],
             validate: {
                 // this will only work when CREATE and SAVE!!!
                 validator: function (val) {
                     return val === this.password;
                 },
                 message:
-                    "password confirmation must equals to password you entered previously.",
+                    'password confirmation must equals to password you entered previously.',
             },
         },
         role: {
             type: String,
-            enum: ["admin", "guest", "user", "store"],
-            default: "guest",
+            enum: ['admin', 'guest', 'user', 'store'],
+            default: 'guest',
         },
         active: {
             type: Boolean,
@@ -48,13 +48,13 @@ const userSchema = new mongoose.Schema(
 );
 
 // hash password
-userSchema.pre("save", async function (next) {
-    if (!this.isModified("password")) return next();
-    this.password = await bcrypt.hash(this.password, 12);
+userSchema.pre('save', async function (next) {
+    if (!this.isModified('password')) return next();
+    this.password = await bcryptjs.hash(this.password, 12);
     this.passwordConfirm = undefined;
 
     if (!validator.isEmail(this.email)) {
-        throw new Error("Please provide a valid email");
+        throw new Error('Please provide a valid email');
     }
 
     // check password strength -> 3up safe
@@ -73,6 +73,6 @@ userSchema.pre(/^find/, function (next) {
     next();
 });
 
-const User = mongoose.model("User", userSchema);
+const User = mongoose.model('User', userSchema);
 
 module.exports = User;

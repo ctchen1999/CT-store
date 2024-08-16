@@ -52,39 +52,57 @@ You can clone this repo for your e-commerce backend system.
 
 ### Installation
 
-1. **Clone the repository:**
+Here provide two ways of setting up the environment:
 
-    ```bash
-    git clone https://github.com/your-username/CT-store.git
-    cd CT-store
-    ```
+1.  Using Docker
 
-2. **Install dependencies:**
+    1.  **Clone the repository:**
 
-    ```bash
-    npm install
-    ```
+        ```bash
+        git clone https://github.com/your-username/CT-store.git
+        cd CT-store
+        ```
 
-3. **Set up environment variables:**
-   Create a `.env` file **in the config directory** and add the following:
+    2.  **Setting up Docker image**
+        ```bash
+        docker-compose up --build
+        ```
 
-    ```env
-    JWT_SECRET = Set JWT SECRET KEY for jwt authorization
-    JWT_EXPIRES_IN = 2h
+2.  Direct run on your local machine
 
-    PORT=3000
-    DATABASE=Your mongodb database link
-    ```
+    1.  **Clone the repository:**
 
-4. **Start the application:**
+        ```bash
+        git clone https://github.com/your-username/CT-store.git
+        cd CT-store
+        ```
 
-    ```bash
-    npm start
-    npm start:prod # with pm2 load balancing
-    ```
+    2.  **Install dependencies:**
 
-5. **Access the API documentation:**
-   Open your browser and navigate to `http://localhost:3000/api-docs` to view the Swagger API documentation.
+        ```bash
+        npm install
+        ```
+
+    3.  **Set up environment variables:**
+        Create a `.env` file **in the config directory** and add the following:
+
+            ```env
+            JWT_SECRET = Set JWT SECRET KEY for jwt authorization
+            JWT_EXPIRES_IN = 2h
+
+            PORT=3000
+            DATABASE=Your mongodb database link
+            ```
+
+    4.  **Start the application:**
+
+        ```bash
+        npm start
+        npm start:prod # with pm2 load balancing
+        ```
+
+    5.  **Access the API documentation:**
+        Open your browser and navigate to `http://localhost:3000/api-docs` to view the Swagger API documentation.
 
 ## PM2 Load Balancing
 

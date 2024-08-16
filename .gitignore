@@ -6,5 +6,7 @@ config
 *.png
 *.rdb
 *.log
+tmp*
 todo.md
 views/
+.tmp*
