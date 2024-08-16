@@ -65,7 +65,7 @@ Here provide two ways of setting up the environment:
 
     2.  **Setting up Docker image**
         ```bash
-        docker-compose up --build
+        docker compose up --build
         ```
         After setting up all these, you can test api on port 3000 (or you can change it in docker-compose file).
 
