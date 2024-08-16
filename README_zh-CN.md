@@ -3,6 +3,9 @@
 CT-store 是一个基于 Node.js、Express、MongoDB 等技术的电子商务后端系统。此项目提供管理产品、用户、购物车和评论的 RESTful API。
 你可以克隆这个仓库来建立你的电子商务后端系统。
 
+[![繁體中文](https://img.shields.io/badge/繁體中文-Readme-blue)](README_zh-TW.md)
+[![简体中文](https://img.shields.io/badge/简体中文-Readme-blue)](README_zh-CN.md)
+
 ## 目录结构
 
 -   `app.js`: 主应用程序文件

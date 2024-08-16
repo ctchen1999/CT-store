@@ -54,7 +54,7 @@ You can clone this repo for your e-commerce backend system.
 
 Here provide two ways of setting up the environment:
 
-1.  Using Docker
+1.  **Using Docker (recommended)**
 
     1.  **Clone the repository:**
 
@@ -67,6 +67,7 @@ Here provide two ways of setting up the environment:
         ```bash
         docker-compose up --build
         ```
+        After setting up all these, you can test api on port 3000 (or you can change it in docker-compose file).
 
 2.  Direct run on your local machine
 
