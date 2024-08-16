@@ -21,7 +21,7 @@ services:
     depends_on:
       - mongodb
     environment:
-      - JWT_SECRET=CTCHEN0127
+      - JWT_SECRET=YourOwnKey
       - JWT_EXPIRES_IN=2h
       - DB_CONNECTION_STRING=mongodb://mongodb:27017/CTStore
     tty: true
